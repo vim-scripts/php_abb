@@ -79,15 +79,6 @@
 "
 " ===========================================================================
 " }}}
-" {{{ personal settings
-" ===========================================================================
-" Section: personal settings
-" ===========================================================================
-set cindent
-set cinoptions==0
-set fdm=marker
-so ~/.vim/ftplugin/html.vim
-" }}}
 " {{{ Section: php functions
 " ===========================================================================
 " Section: php functions 
@@ -111,19 +102,42 @@ iab phparray_push array_push($X, php~x);<esc>FXs<c-o>:call getchar()<cr>
 iab phpap array_push($X, php~x);<esc>FXs<c-o>:call getchar()<cr>
 "no-prefix: iab array_push array_push($X, );<esc>FXs<c-o>:call getchar()<cr>
 "}}}
+"  {{{ array_key_exists
+" ---------------------------------------------------------------------------
+" PHP: bool array_key_exists ( mixed key, array search)
+" ---------------------------------------------------------------------------
+"""nmap <leader>ake yiwoa<esc>phpif array_key_exists('X', $<esc>pa)<esc>FXs<c-o>:call getchar()<cr>
+"""vmap <leader>ake yoa<esc>array_key_exists('X', $<esc>pa)<esc>FXs<c-o>:call getchar()<cr>
+iab phparray_key_exists array_key_exists('X', $php~x)<esc>FXs<c-o>:call getchar()<cr> 
+iab phpake array_key_exists('X', $php~x)<esc>FXs<c-o>:call getchar()<cr>
+iab phppke array_key_exists('X', $_POST)<esc>FXs<c-o>:call getchar()<cr>
+iab phpcke array_key_exists('X', $_COOKIE)<esc>FXs<c-o>:call getchar()<cr>
+iab phpgke array_key_exists('X', $_GET)<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab array_key_exists array_key_exists('X', $php~x)<esc>FXs<c-o>:call getchar()<cr>
+"}}}
+"  {{{ count
+" ---------------------------------------------------------------------------
+" PHP: int count ( mixed var)
+" ---------------------------------------------------------------------------
+nmap <leader>cnt yiwo$X = c<esc>aount($<esc>pa);<esc>FXs
+vmap <leader>cnt yo$X = c<esc>aount($<esc>pa);<esc>FXs
+iab phpcount $X = count($php~x);<esc>FXs<c-o>:call getchar()<cr>
+iab phpcnt $X = count($php~x);<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab count count($X);<esc>FXs<c-o>:call getchar()<cr>
+"}}}
 "  {{{ echo
 " ---------------------------------------------------------------------------
-"  *PHP: echo ( string arg1 [, string argn...])
+"  PHP: echo ( string arg1 [, string argn...])
 " ---------------------------------------------------------------------------
-nmap <leader>e yiwoe<esc>acho "$<esc>pa";<esc>
-vmap <leader>e yoe<esc>acho "$<esc>pa";<esc>
+nmap <leader>e yiwoe<esc>acho $<esc>pa;<esc>
+vmap <leader>e yoe<esc>acho $<esc>pa;<esc>
 iab phpecho echo "X";<esc>FXs<c-o>:call getchar()<cr>
 iab phpe echo "X";<esc>FXs<c-o>:call getchar()<cr>
 "no-prefix: iab echo echo "X";<esc>FXs<c-o>:call getchar()<cr>
 "// }}}
 "  {{{ explode
 " ---------------------------------------------------------------------------
-"  *PHP: array explode ( string separator, string string [, int limit])
+"  PHP: array explode ( string separator, string string [, int limit])
 " ---------------------------------------------------------------------------
 "  Comments:
 "  included the split function as it is an alias to explode
@@ -161,6 +175,18 @@ vmap <leader>ext yoe<esc>axtract($<esc>pa, EXTR_OVERWRITE);<esc>
 iab phpextract extract($x, EXTR_OVERWRITE);<esc>Fxs<c-o>:call getchar()<cr>
 iab phpext extract($x, EXTR_OVERWRITE);<esc>Fxs<c-o>:call getchar()<cr>
 "no-prefix: iab extract extract($x, EXTR_OVERWRITE);<esc>Fxs<c-o>:call getchar()<cr>
+" }}}
+"  {{{ htmlspecialchars
+"
+" ---------------------------------------------------------------------------
+" PHP: string htmlspecialchars ( string string [, int quote_style [, string charset]])
+" ---------------------------------------------------------------------------
+nmap <leader>hsc yiwo$<esc>pa = h<esc>atmlspecialchars($<esc>pa);<esc>
+vmap <leader>hsc yo$<esc>pa = h<esc>atmlspecialchars($<esc>pa);<esc>
+iab phphtmlspecialchars $X = htmlspecialchars($php~x);<esc>FXs<c-o>:call getchar()<cr>
+iab phphsc $X = htmlspecialchars($php~x);<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab htmlspecialchars htmlspecialchars($X);<esc>FXs<c-o>:call getchar()<cr>
+"
 " }}}
 "  {{{ implode
 " ---------------------------------------------------------------------------
@@ -240,14 +266,14 @@ iab phpp print("X");<esc>FXs<c-o>:call getchar()<cr>
 " ---------------------------------------------------------------------------
 nmap <leader>pr yiwop<esc>arint_r($<esc>pa);<esc>
 vmap <leader>pr yop<esc>arint_r($<esc>pa);<esc>
-iab phpprint_r print_r("$X");<esc>FXs<c-o>:call getchar()<cr>
-iab phppr print_r("$X");<esc>FXs<c-o>:call getchar()<cr>
-"no-prefix: iab print_r print_r("$X");<esc>FXs<c-o>:call getchar()<cr>
+iab phpprint_r print_r($X);<esc>FXs<c-o>:call getchar()<cr>
+iab phppr print_r($X);<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab print_r print_r($X);<esc>FXs<c-o>:call getchar()<cr>
 " }}}
 "  {{{ require
 " ---------------------------------------------------------------------------
 "  PHP: require()
-"  *PHP: require_once()
+"  PHP: require_once()
 " ---------------------------------------------------------------------------
 iab phprequire_once require_once("X");<esc>FXs<c-o>:call getchar()<cr>
 iab phpreq require_once("X");<esc>FXs<c-o>:call getchar()<cr>
@@ -257,7 +283,7 @@ iab phprequire require("X");<esc>FXs<c-o>:call getchar()<cr>
 " }}}
 "  {{{ strlen
 " ---------------------------------------------------------------------------
-"  *PHP: int strlen ( string str)
+"  PHP: int strlen ( string str)
 " ---------------------------------------------------------------------------
 nmap <leader>sl yiwos<esc>atrlen($<esc>pa)<esc>
 vmap <leader>sl yos<esc>astlen($<esc>pa)<esc>
@@ -267,20 +293,42 @@ iab phpstrl strlen($X)<esc>FXs<c-o>:call getchar()<cr>
 " }}}
 "  {{{ strcmp
 " ---------------------------------------------------------------------------
-"  *PHP: int strcmp ( string str1, string str2)
+"  PHP: int strcmp ( string str1, string str2)
 " ---------------------------------------------------------------------------
 "  Comments:  I am always checking for a positive match so this function is
 "             negated.
 " ---------------------------------------------------------------------------
-nmap <leader>sc yiwo!s<esc>atrcmp($<esc>pa, "X")<esc>FXs
-nmap <leader>sc yo!s<esc>atrcmp($<esc>pa, "X")<esc>FXs
-iab phpstrcmp !strcmp($X, "php~x")<esc>FXs<c-o>:call getchar()<cr>
-iab phpsc !strcmp($X, "php~x")<esc>FXs<c-o>:call getchar()<cr>
-"no-prefix: iab strcmp !strcmp($X, "php~x")<esc>FXs<c-o>:call getchar()<cr>
+nmap <leader>sc yiwo!s<esc>atrcmp($<esc>pa, X)<esc>FXs
+nmap <leader>sc yo!s<esc>atrcmp($<esc>pa, X)<esc>FXs
+iab phpstrcmp strcmp($X, php~x)<esc>FXs<c-o>:call getchar()<cr>
+iab phpsc strcmp($X, php~x)<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab strcmp strcmp($X, php~x)<esc>FXs<c-o>:call getchar()<cr>
+" }}}
+"  {{{ strstr
+" ---------------------------------------------------------------------------
+" PHP: string strstr ( string haystack, string needle)
+" ---------------------------------------------------------------------------
+nmap <leader>strs yiwo$<esc>pa = s<esc>atrstr($<esc>pa, 'X');<esc>FXs
+vmap <leader>strs yo$<esc>pa = s<esc>atrstr($<esc>pa, 'X');<esc>FXs
+iab phpstrstr $X = strstr($php~x,'php~x');<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab strstr strstr($X, 'php~x');<esc>FXs<c-o>:call getchar()<cr>
+" }}}
+"  {{{ strcasecmp
+" ---------------------------------------------------------------------------
+" PHP: int strcasecmp ( string str1, string str2)
+" ---------------------------------------------------------------------------
+"  Comments:  I am always checking for a positive match so this function is
+"             negated.
+" ---------------------------------------------------------------------------
+nmap <leader>sc yiwo!s<esc>atrcasecmp($<esc>pa, "X")<esc>FXs
+nmap <leader>sc yo!s<esc>atrcasecmp($<esc>pa, "X")<esc>FXs
+iab phpstrcmp strcasecmp($X, "php~x")<esc>FXs<c-o>:call getchar()<cr>
+iab phpsc strcasecmp($X, "php~x")<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab strcasecmp strcasecmp($X, "php~x")<esc>FXs<c-o>:call getchar()<cr>
 " }}}
 "  {{{ str_replace
 " ---------------------------------------------------------------------------
-"  *PHP: mixed str_replace ( mixed search, mixed replace, mixed subject)
+"  PHP: mixed str_replace ( mixed search, mixed replace, mixed subject)
 " ---------------------------------------------------------------------------
 nmap <leader>strr yiwo$<esc>pa = s<esc>atr_replace("X", "php~x", $<esc>pa);<esc>FXs<c-o>:call getchar()<cr>a
 vmap <leader>strr yo$<esc>pa = s<esc>atr_replace("X", "php~x", $<esc>pa);<esc>FXs<c-o>:call getchar()<cr>a
@@ -290,7 +338,7 @@ iab phpstrr $X = str_replace("php~x", "php~x", $php~x);<esc>FXs<c-o>:call getcha
 " }}}
 "  {{{ strtolower
 " ---------------------------------------------------------------------------
-"  *PHP: string strtolower ( string str)
+"  PHP: string strtolower ( string str)
 " ---------------------------------------------------------------------------
 nmap <leader>strtl yiwo$<esc>pa = s<esc>atrtolower($<esc>pa);<esc>
 vmap <leader>strtl yo$<esc>pa = s<esc>atrtolower($<esc>pa);<esc>
@@ -300,7 +348,7 @@ iab phpstrtl $X = strtolower($php~x);<esc>FXs<c-o>:call getchar()<cr>
 " }}}
 "  {{{ strtoupper
 " ---------------------------------------------------------------------------
-"  *PHP: string strtoupper ( string str)
+"  PHP: string strtoupper ( string str)
 " ---------------------------------------------------------------------------
 nmap <leader>strtl yiwo$<esc>pa = s<esc>atrtoupper($<esc>pa);<esc>
 vmap <leader>strtl yo$<esc>pa = s<esc>atrtoupper($<esc>pa);<esc>
@@ -308,9 +356,29 @@ iab phpstrtoupper $X = strtoupper($php~x);<esc>FXs<c-o>:call getchar()<cr>
 iab phpstrtu $X = strtoupper($php~x);<esc>FXs<c-o>:call getchar()<cr>
 "no-prefix: iab strtoupper strtoupper($X);<esc>FXs<c-o>:call getchar()<cr>
 " }}}
+"  {{{ substr
+" ---------------------------------------------------------------------------
+" PHP: string substr ( string string, int start [, int length])
+" ---------------------------------------------------------------------------
+nmap <leader>ss yiwo$<esc>pa = s<esc>aubstr($<esc>pa, X);<esc>FXs
+vmap <leader>ss yo$<esc>pa = s<esc>aubstr($<esc>pa, X);<esc>FXs
+iab phpsubstr $X = substr($php~x, php~x);<esc>FXs<c-o>:call getchar()<cr>
+iab phpss $X = substr($php~x, php~x);<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab substr substr($php~x, php~x);<esc>FXs<c-o>:call getchar()<cr>
+" }}}
+"  {{{ trigger_error
+" ---------------------------------------------------------------------------
+" PHP: void trigger_error ( string error_msg [, int error_type])
+" ---------------------------------------------------------------------------
+nmap <leader>te yiwo t<esc>arigger_error(<esc>pa, E_USER_ERROR);<esc>
+vmap <leader>ss yo t<esc>arigger_error(<esc>pa, E_USER_ERROR);<esc>
+iab phptrigger_error trigger_error(X, E_USER_ERROR);<esc>FXs<c-o>:call getchar()<cr>
+iab phpte trigger_error(X, E_USER_ERROR);<esc>FXs<c-o>:call getchar()<cr>
+"no-prefix: iab trigger_error trigger_error(X, E_USER_ERROR);<esc>FXs<c-o>:call getchar()<cr>
+" }}}
 "  {{{ unset
 " ---------------------------------------------------------------------------
-"  *PHP: void unset ( mixed var [, mixed var [, ...]])
+"  PHP: void unset ( mixed var [, mixed var [, ...]])
 " ---------------------------------------------------------------------------
 nmap <leader>us yiwou<esc>anset($<esc>pa)<esc>
 vmap <leader>us you<esc>anset($<esc>pa)<esc>
@@ -320,7 +388,7 @@ iab phpus unset($X);<esc>FXs<c-o>:call getchar()<cr>
 " }}}
 "  {{{ wordwrap
 " ---------------------------------------------------------------------------
-"  *PHP: string wordwrap ( string str [, int width [, string break [, int cut]]])
+"  PHP: string wordwrap ( string str [, int width [, string break [, int cut]]])
 " ---------------------------------------------------------------------------
 nmap <leader>ww yiwo$<esc>pa = w<esc>aordwrap($<esc>pa, X);<esc>FXs<c-o>:call getchar()<cr>a
 vmap <leader>ww yo$<esc>pa = w<esc>aordwrap($<esc>pa, X);<esc>FXs<c-o>:call getchar()<cr>a
@@ -422,17 +490,18 @@ iab phpsql $sql = "X";<esc>FXs<c-o>:call getchar()<cr>
 " ---------------------------------------------------------------------------
 "       // $Id$ <cursor> 
 " ---------------------------------------------------------------------------
-iab phpid // $Id: php.vim,v 1.4 2002/11/02 04:34:21 culley Exp culley $
+iab phpid // $Id$
 " }}}
 "  {{{ phpcom
 " ---------------------------------------------------------------------------
-" phpcom Output:
+" phpcom Output:  05-03-2003 switched this to ///
 " ---------------------------------------------------------------------------
 "       /**
 "       * <cursor>
 "       */
 " ---------------------------------------------------------------------------
-iab phpcom /**<cr><bs>*<space>X<cr>*/<esc>?X<cr>s<c-o>:call getchar()<cr>
+"iab phpcom /**<cr><bs>*<space>X<cr>*/<esc>?X<cr>s<c-o>:call getchar()<cr>
+iab phpcom ///
 " }}}
 "  {{{ phploc
 " ---------------------------------------------------------------------------
@@ -467,12 +536,12 @@ iab phplv $sql = "select last_value from X";<esc>o$last_value = $dbh->getOne($sq
 " ---------------------------------------------------------------------------
 " phptc Output:
 " ---------------------------------------------------------------------------
-"       to_char(<cursor>, 'MM/DD/YYYY') as x
+"       to_char(<cursor>, 'YYYY-MM-DD') as x
 " ---------------------------------------------------------------------------
 " Usage: this is actually a sql abbreviation.  output the postgresql
 " date formating function to_char
 " ---------------------------------------------------------------------------
-iab phptc to_char(X, 'MM/DD/YYYY') as php~x<esc>?X<cr>s<c-o>:call getchar()<cr>
+iab phptc to_char(X, 'YYYY-MM-DD') as php~x<esc>?X<cr>s<c-o>:call getchar()<cr>
 " }}}
 "  {{{ phpfold
 " ---------------------------------------------------------------------------
@@ -481,6 +550,13 @@ iab phptc to_char(X, 'MM/DD/YYYY') as php~x<esc>?X<cr>s<c-o>:call getchar()<cr>
 " Usage: creates a vim fold behind php comments.
 " ---------------------------------------------------------------------------
 iab phpfold // {{{ X <cr>// }}}<esc>?X<cr>s<c-o>:call getchar()<cr>
+" }}}
+"  {{{ phptodo
+" ---------------------------------------------------------------------------
+" phptodo Output:
+"       //TODO:
+" ---------------------------------------------------------------------------
+iab phptodo //TODO:
 " }}}
 " }}}
 " {{{ Section: PEAR code snippets
@@ -533,6 +609,22 @@ iab phpqr $result = $dbh->query($sql);<cr><cr>while ($row = $result->fetchRow())
 " ---------------------------------------------------------------------------
 iab phpgo $X = $dbh->getOne($sql);<esc>FXs<c-o>:call getchar()<cr>
 " }}}
+"  {{{ phpgr
+" ---------------------------------------------------------------------------
+" phpgr Output:
+" ---------------------------------------------------------------------------
+"       $data = $dbh->getRow($sql);<cursor>
+" ---------------------------------------------------------------------------
+iab phpgr $data = $dbh->getRow($sql);<c-o>:call getchar()<cr>
+" }}}
+"  {{{ phpgcol
+" ---------------------------------------------------------------------------
+" phpgcol Output:
+" ---------------------------------------------------------------------------
+"       $dbh->getCol($sql);<cursor>
+" ---------------------------------------------------------------------------
+iab phpgcol $data = $dbh->getCol($sql);<c-o>:call getchar()<cr>
+" }}}
 "  {{{ phpga
 " ---------------------------------------------------------------------------
 " phpga Output:
@@ -559,11 +651,19 @@ iab phprow $row["X"];<esc>FXs<c-o>:call getchar()<cr>
 " }}}
 "  {{{ phpnr
 " ---------------------------------------------------------------------------
-" phpnr Output:
+" *UPDATE phpnr Output:
 " ---------------------------------------------------------------------------
 "       $result->numRows();<cursor>
 " ---------------------------------------------------------------------------
-iab phpnr $result->numRows();<c-o>:call getchar()<cr>
+iab phpnr $X = $result->numRows();<esc>FXs<c-o>:call getchar()<cr>
+" }}}
+"  {{{ phpni
+" ---------------------------------------------------------------------------
+" phpni Output:
+" ---------------------------------------------------------------------------
+"       $X = $dbh->nextId('php~x', false);<cursor>
+" ---------------------------------------------------------------------------
+iab phpni $X = $dbh->nextId('php~x', false);<esc>FXs<c-o>:call getchar()<cr>
 " }}}
 "  {{{ phptbl
 " ---------------------------------------------------------------------------
