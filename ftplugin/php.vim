@@ -1,27 +1,38 @@
 "
-" $Id: php.vim,v 1.2 2002/10/22 04:13:04 culley Exp culley $  
+" $Id: php.vim,v 1.3 2002/11/01 00:04:48 culley Exp culley $  
 "
 " ===================================================================
 " I wrote these php macros for my personal use.  They're
 " freely-distributable and freely-modifiable.
 " 
 " If you do make any major additions or changes, or even just
-" have a suggestion for improvement, feel free to let me
-" know.  I'd appreciate any suggestions.
+" have a suggestion for improvement, feel free to let me know.
+" I'd appreciate any suggestions.
 "
-" quite a few of the abbreviations ouput PEAR code snippets, mostly
-" DB and HTML/Table.
+" quite a few of the abbreviations ouput PEAR code snippets,
+" mostly DB and HTML/Table.  
 "
-" culley@ml1.net
+" There is a section of abbreviations at the end of this script
+" that *do not* use the php prefix.  These could very well mess
+" you up if you aren't used to them...
+"
+" many of the insert mode abbreviations leave 'x' characters here
+" and there as place holders to jump to.  <c-x> or <leader>x will
+" take you to the next 'x' I have added this functionality to F7 too
+"
+" culley@ml1.net 
 " someday I will get a web page together...
 " ===================================================================
 
 " cindent is helpful for many of the insert mode abbreviations
 set cindent
 set cinoptions==0
+set tags=/my/tags
 set fdm=marker
 " can be nice to have your html settings present too
 so ~/.vim/ftplugin/html.vim
+" use that excelent sql script available on vim.org
+:DB db_name
 
 "
 " ===================================================================
@@ -32,10 +43,12 @@ so ~/.vim/ftplugin/html.vim
 " -------------------------------------------------------------------
 " many of the insert mode abbreviations leave 'x' characters here and
 " there as place holders to jump to.  <c-x> or <leader>x will take you
-" to the next 'x' 
+" to the next 'x'. I am not sure that I like this... might change. 
 " -------------------------------------------------------------------
 nmap    <leader>x       /x<cr>s
 imap    <c-x>           <esc>/x<cr>s
+imap    <F7>            <esc>/x<cr>s
+nmap    <F7>            <esc>/x<cr>s
 nmap    <c-x>           /x<cr>s
 
 " -------------------------------------------------------------------
@@ -43,14 +56,48 @@ nmap    <c-x>           /x<cr>s
 " line and insert  print("$variable<br />");
 " useful for debugging
 " -------------------------------------------------------------------
-nmap    <leader>pv      yiwoprint("$<esc>pa<br />");
-vmap    <leader>pv      yoprint("$<esc>pa<br />");
+nmap    <leader>pv yiwoprint("$<esc>pa<br />");
+vmap    <leader>pv yoprint("$<esc>pa<br />");
 
 " -------------------------------------------------------------------
 " visual map to insert a vim fold in php comments
 " -------------------------------------------------------------------
-vmap    <leader>fold   mz:<ESC>'<O// {{{<ESC>'>o// }}}<ESC>`z
+vmap    <leader>fold mz:<ESC>'<O// {{{<ESC>'>o// }}}<ESC>`z
  
+" -------------------------------------------------------------------
+"  when the cursor is on a php array variable use this map to open a 
+"  new line below the cursor and insert an array_push function.
+"  Example:
+"  $test = array();                 //cursor is on test
+"  array_push($test, <cursor>);     //this line will be inserted
+"
+" -------------------------------------------------------------------
+nmap    <leader>ap yiwoarray_push($<esc>pa, X);<esc>FXs
+vmap    <leader>ap yoarray_push($<esc>pa, X);<esc>FXs
+
+" -------------------------------------------------------------------
+"  when the cursor is on a php array variable use this map to open a 
+"  new line below the cursor and insert the extract function
+"  Example:
+"  $test = array();           //cursor is on test
+"  extract($test, EXTR_SKIP); //this line will be inserted
+"  EXTR_SKIP -- If there is a collision, don't overwrite the existing 
+"               variable
+"
+" -------------------------------------------------------------------
+nmap    <leader>ae yiwoextract($<esc>pa, EXTR_SKIP);<esc>
+vmap    <leader>ae yoextract($<esc>pa, EXTR_SKIP);<esc>
+
+" -------------------------------------------------------------------
+"  when the cursor is on a php array variable use this map to open a 
+"  new line below the cursor and insert a print_r function.
+"  Example:
+"  $test = array(); //cursor is on test
+"  print_r($test);  //this line will be inserted
+"
+" -------------------------------------------------------------------
+nmap    <leader>apr yiwoprint_r($<esc>pa);<esc>
+vmap    <leader>apr yoprint_r($<esc>pa);<esc>
 
 "
 " ===================================================================
@@ -67,7 +114,7 @@ vmap    <leader>fold   mz:<ESC>'<O// {{{<ESC>'>o// }}}<ESC>`z
 " -------------------------------------------------------------------
 " Usage:  cintent setting should indent properly after opening a line
 " -------------------------------------------------------------------
-iab phpif       if ($X) {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
+iab phpif if ($X) {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -75,7 +122,7 @@ iab phpif       if ($X) {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
 " -------------------------------------------------------------------
 "       $<cursor> = (x) ? x : x;       
 " -------------------------------------------------------------------
-iab phpifl      $X = ($x) ? $x : $x;<esc>FXs<c-o>:call getchar()<cr>
+iab phpifl $X = ($x) ? $x : $x;<esc>FXs<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -85,7 +132,7 @@ iab phpifl      $X = ($x) ? $x : $x;<esc>FXs<c-o>:call getchar()<cr>
 "       } else {
 "       }
 " -------------------------------------------------------------------
-iab phpife      if ($X) {<cr>} else {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
+iab phpife if ($X) {<cr>} else {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -96,7 +143,7 @@ iab phpife      if ($X) {<cr>} else {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
 "           break;
 "       }
 " -------------------------------------------------------------------
-iab phpswitch   switch ($X) {<cr>Case $x:<cr>break;<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
+iab phpswitch switch ($X) {<cr>Case $x:<cr>break;<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -114,7 +161,16 @@ iab phpfor for($i=0;$iX;$i++) {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
 "       foreach($<cursor> as $k => $v) {
 "       }
 " -------------------------------------------------------------------
-iab phpfore     foreach($X as $k => $v) {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
+iab phpfore foreach($X as $k => $v) {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
+
+"
+" -------------------------------------------------------------------
+" phpwhile Output:
+" -------------------------------------------------------------------
+"       while ($<cursor>) {
+"       }
+" -------------------------------------------------------------------
+iab phpwhile while ($X) {<cr>}<esc>?X<cr>s<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -127,7 +183,7 @@ iab phpfore     foreach($X as $k => $v) {<cr>}<esc>?X<cr>s<c-o>:call getchar()<c
 "       }
 "       // }}}
 " -------------------------------------------------------------------
-iab phpfunc     // {{{ function <cr>function X()<cr>{<cr><cr>}<cr>// }}}<esc>?X<cr>s<c-o>:call getchar()<cr>
+iab phpfunc // {{{ function <cr>function X()<cr>{<cr><cr>}<cr>// }}}<esc>?X<cr>s<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -139,7 +195,7 @@ iab phpfunc     // {{{ function <cr>function X()<cr>{<cr><cr>}<cr>// }}}<esc>?X<
 " -------------------------------------------------------------------
 " Usage: cut a hole in the php output for some html
 " -------------------------------------------------------------------
-iab phphtml     ?><cr><?php<esc>O<c-o>:call getchar()<cr>
+iab phphtml ?><cr><?php<esc>O<c-o>:call getchar()<cr>
 
 
 
@@ -178,33 +234,41 @@ iab phpsql $sql = "X";<esc>FXs<c-o>:call getchar()<cr>
 " -------------------------------------------------------------------
 " phpid Output:
 " -------------------------------------------------------------------
-"       // $Id$ <cursor> 
+"       // $Id: php.vim,v 1.3 2002/11/01 00:04:48 culley Exp culley $ <cursor> 
 " -------------------------------------------------------------------
-iab phpid  // $Id$
+iab phpid // $Id: php.vim,v 1.3 2002/11/01 00:04:48 culley Exp culley $
 
 "
 " -------------------------------------------------------------------
 " phppost Output:
 " -------------------------------------------------------------------
-"       $_POST["<cursor>"];
+"       $_POST["<cursor>"]
 " -------------------------------------------------------------------
-iab phppost $_POST["X"];<esc>FXs<c-o>:call getchar()<cr>
+iab phppost $_POST["X"]<esc>FXs<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
 " phpget Output:
 " -------------------------------------------------------------------
-"       $_GET["<cursor>"];
+"       $_GET["<cursor>"]
 " -------------------------------------------------------------------
-iab phpget $_GET["X"];<esc>FXs<c-o>:call getchar()<cr>
+iab phpget $_GET["X"]<esc>FXs<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
 " phpsess Output:
 " -------------------------------------------------------------------
-"       $_SESSION["<cursor>"];
+"       $_SESSION["<cursor>"]
 " -------------------------------------------------------------------
-iab phpsess $_SESSION["X"];<esc>FXs<c-o>:call getchar()<cr>
+iab phpsess $_SESSION["X"]<esc>FXs<c-o>:call getchar()<cr>
+
+"
+" -------------------------------------------------------------------
+" phpserver Output:
+" -------------------------------------------------------------------
+"       $_SERVER["<cursor>"]
+" -------------------------------------------------------------------
+iab phpserver $_SERVER["X"]<esc>FXs<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -252,13 +316,23 @@ iab phppm preg_match('/^X$/',$x,$matches);<esc>FXs<c-o>:call getchar()<cr>
 " -------------------------------------------------------------------
 " phppc Output:
 " -------------------------------------------------------------------
-"       $dbh =& getConnection(ABC_DB_SITEADMIN);<cursor>
+"       $dbh =& getConnection();<cursor>
 " -------------------------------------------------------------------
 " Usage: not going to be very useful to most people.  This calls a
-" function that returns a PEAR connection object.  ABC_DB_SITEADMIN
-" is a constant...
+" function that returns a PEAR connection object.  
 " -------------------------------------------------------------------
-iab phpgc $dbh =& getConnection(ABC_DB_SITEADMIN);<c-o>:call getchar()<cr>
+iab phpgc $dbh =& getConnection();<c-o>:call getchar()<cr>
+
+"
+" -------------------------------------------------------------------
+" phplv Output:
+" -------------------------------------------------------------------
+"       $sql = "select last_value from <cursor>"; 
+"       $last_value = $dbh->getOne($sql);
+" -------------------------------------------------------------------
+" Usage: look up the last value from a postgresql sequence
+" -------------------------------------------------------------------
+iab phplv $sql = "select last_value from X";<esc>o$last_value = $dbh->getOne($sql);<esc>?X<cr>s<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -302,6 +376,14 @@ iab phpga $data = $dbh->getAll($sql);<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
+" phpgassoc Output:
+" -------------------------------------------------------------------
+"       $data = $dbh->getAssoc($sql);
+" -------------------------------------------------------------------
+iab phpgassoc $data = $dbh->getAssoc($sql);<c-o>:call getchar()<cr>
+
+"
+" -------------------------------------------------------------------
 " phprow Output:
 " -------------------------------------------------------------------
 "       $row["<cursor>"];
@@ -338,12 +420,12 @@ iab phpself $_SERVER['PHP_SELF']<c-o>:call getchar()<cr>
 " -------------------------------------------------------------------
 " phptbl Output:
 " -------------------------------------------------------------------
-"       $table1 = new HTML_Table(ABC_TBL_ATTRIBUTES);
+"       $table1 = new HTML_Table(TBL_ATTRIBUTES);
 " -------------------------------------------------------------------
-" Usage: create a new PEAR table object replace ABC_TBL_ATTRIBUTES 
+" Usage: create a new PEAR table object replace TBL_ATTRIBUTES 
 " with your favorite table attributes.
 " -------------------------------------------------------------------
-iab phptbl $table1 = new HTML_Table(ABC_TBL_ATTRIBUTES);<c-o>:call getchar()<cr>
+iab phptbl $table1 = new HTML_Table(TBL_ATTRIBUTES);<c-o>:call getchar()<cr>
 
 "
 " -------------------------------------------------------------------
@@ -352,6 +434,7 @@ iab phptbl $table1 = new HTML_Table(ABC_TBL_ATTRIBUTES);<c-o>:call getchar()<cr>
 "       $table1->addRow(array(<cursor>));
 " -------------------------------------------------------------------
 " Usage: I don't use this much but it can be used to add a table row
+" usually just cut and paste...
 " -------------------------------------------------------------------
 iab phptblr $table1->addRow(array(X));<esc>?X<cr>s<c-o>:call getchar()<cr>
 
@@ -389,9 +472,18 @@ iab phpfold // {{{ X <cr>// }}}<esc>?X<cr>s<c-o>:call getchar()<cr>
 " ===================================================================
 " abbreviations without prefixes-- can mess up your typing quite a bit
 " use iabclear before pasting anthing.  Could be expanded ad nauseam
+" Expand these abbreiations by hitting the space bar
+"
+" Not sure if I want to switch these to having the php prefix...
 " ===================================================================
 "
 iab echo echo "";<left><left><c-o>:call getchar()<cr>
 iab isset isset($X)<esc>FXs<c-o>:call getchar()<cr>
 iab strlen strlen($X)<esc>FXs<c-o>:call getchar()<cr>
 iab unset unset($X);<esc>FXs<c-o>:call getchar()<cr>
+iab str_replace str_replace("X", "x", $x);<esc>FXs<c-o>:call getchar()<cr>
+iab return return $X;<esc>FXs<c-o>:call getchar()<cr>
+iab global global $X;<esc>FXs<c-o>:call getchar()<cr>
+iab preg_match preg_match('/^X$/',$x,$matches)<esc>Fxs<c-o>:call getchar()<cr>
+
+
