@@ -1,0 +1,27 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=455
+
+php_abb is a ftplugin for php, mostly providing insert mode abbreviations
+for php builtin functions and control structures.  These abbreviations
+expand to function stubs and should help you remember the syntax in
+addition to speeding typing.  A map-like function that does a number of
+possibly obtuse things is also included.
+
+The insert mode abbreviations come in two falvors: those using the raw
+php function name (these can be disabled) and those prefixed with g:phpLeader.  
+See the help file for details.
+
+The phpActOnVariable function performs a number of activities on the php
+variable under your cursor at the time the function is executed.  You should
+create a map to this function.  As an example of how you would use this, say you
+have mapped it to <leader>m and you have your cursor on any letter in the word
+test in the following code:
+
+     $test = "FooBaR";
+
+If you then type <leader>m and strtl<cr> a new line will be opened underneath
+and the following code will be inserted:
+
+     $test = strtolower($test);
+
+You can see a list of all the mappings for this function by executing the
+function and entering '?' when prompted.
