@@ -13,6 +13,7 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
     customization           : |php-abb-customize|
     abbreviation reference  : |php-abb-reference|
     todo list               : |php-abb-todo|
+    credits                 : |php-abb-credits|
 
 ==============================================================================
 2. php_abb installation                                      *php-abb-install*
@@ -48,7 +49,7 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
    possibly obtuse things is also included (see |PhpActOnVariable|).
 
    The insert mode |abbreviations| come in two falvors: those using the raw
-   php function name (these can be disabled-- see |usePhpFunctionNames|) and
+   php function name (these can be disabled-- see |phpUseFunctionNames|) and
    those prefixed with |phpLeader|.
 
    Because most php functions have more than one argument some sort of
@@ -88,32 +89,77 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
 ==============================================================================
 4. php_abb customization                                   *php-abb-customize*
 
-4.1. use php function names
+4.1. g:phpUseFunctionNames
 ------------------------------------------------------------------------------
-                                                         *usePhpFunctionNames*
+                                                         *phpUseFunctionNames*
+
     The default setting for this plugin is to use the php function names
     themselves as abbreviations. type array_key_esists and a function shell
     will be expanded.  You can disable this feature by putting the following
     line in your |vimrc| or in another php |ftplugin| file:
-      let g:usePhpFunctionNames = "NO"
+
+      let g:phpUseFunctionNames = 0 
  
     Abbreviations have not been created for particularly problematic functions
     like count, require, include etc.
 
 
-4.2. phpLeader
+4.2. g:phpLeader
 ------------------------------------------------------------------------------
                                                                   *phpLeader*
+
     Other abbreviations have been provided in addition to using the php
     function names.  All of these additional abbreviations are prefixed with
     the value of g:phpLeader.  The default value of this variable is "php" so,
     for example, typing phpprint will output the print abbreviation.  Change
-    this prefix by putting the following line in your |vimrc|  or in another
+    this prefix by putting the following line in your |vimrc| or in another
     php |ftplugin| file:
+
       let g:phpLeader = "php"
     
     and replace php with whatever value you prefer.
 
+4.3. g:phpNewlineBeforeBrace
+------------------------------------------------------------------------------
+                                                       *phpNewlineBeforeBrace*
+    
+    The default setting for this script is to format php control structures
+    according to the PEAR coding standards detailed here:
+
+    http://pear.php.net/manual/en/standards.control.php
+
+    If you dont like this style and  prefer a new line before the open brace
+    then putting the following line in your |vimrc| or in another php
+    |ftplugin| file:
+
+      let g:phpNewlineBeforeBrace = 1
+
+4.4. g:phpFoldMarkerFunctions
+------------------------------------------------------------------------------
+                                                      *phpFoldMarkerFunctions*
+    
+    
+    This option will create vim foldmarkers (see |fold-marker|)around newly
+    created function.  Most people are probably not going to want this option
+    so it is off by default.  See |func| for an example of the syntax.
+
+    If you would like to wrap your functions in a vim fold then put the
+    following line in your |vimrc| or in another php |ftplugin| file:
+
+      let g:phpFoldMarkerFunctions = 1
+
+4.5. g:phpRequireIncludeParens
+------------------------------------------------------------------------------
+                                                     *phpRequireIncludeParens*
+    
+    Some people like to use parenthesis for |require|, |require_once|,
+    |include| and |include_once| and some don't.  The default setting is to
+    use parenthesis.
+
+    If you would prefer not to use parenthesis for these statements then put
+    the following line in your |vimrc| or in another php |ftplugin| file:
+
+      let g:phpRequireIncludeParens = 0
 
 ==============================================================================
 5. abbreviation reference	                               *php-abb-reference*
@@ -130,7 +176,7 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
 
 5.1. quick reference
 ------------------------------------------------------------------------------
-    Remember that all of these abbreviations are prefixed with <phpLeader>
+    Remember that all of these abbreviations are prefixed with |phpLeader|
 ------------------------------------------------------------------------------
 
     |ake|                   - array key exist
@@ -145,13 +191,15 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
     |cookie|                - cookie
     |count|                 - count
     |c|                     - count
+    |e|                     - echo
     |echo|                  - echo 
+    |em|                    - empty
+    |empty|                 - empty
     |env|                   - environment 
     |explode|               - explode
     |exp|                   - explode
     |extract|               - extract
     |ext|                   - extract
-    |e|                     - echo
     |fore|                  - for each
     |for|                   - for
     |func|                  - function
@@ -170,7 +218,13 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
     |include|               - include 
     |inc|                   - include (once)
     |isset|                 - is set
+    |isn|                   - is null
+    |isnull|                - is null
+    |isnum|                 - is numeric
+    |isnumeric|             - is numeric
     |iss|                   - is set
+    |is_null|               - is null
+    |is_numeric|            - is numeric
     |join|                  - join
     |j|                     - join
     |lower|                 - string to lower case
@@ -270,6 +324,12 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
    Base Abbreviated : no
    Act On Variable  : yes
 ------------------------------------------------------------------------------
+                                                                  *em* *empty*
+   Abberviation(s)  : em, empty
+   Expands To       : empty($--cursor--)
+   Base Abbreviated : no
+   Act On Variable  : yes
+------------------------------------------------------------------------------
                                                                          *env*
    Abberviation(s)  : env
    Expands To       : $_ENV['--cursor--']
@@ -294,13 +354,17 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
                       }
    Base Abbreviated : no
    Act On Variable  : no
+   Notes            : If you don't like the placement of the braces see
+                      |phpNewlineBeforeBrace| for alternative formats.
 ------------------------------------------------------------------------------
                                                                         *fore*
    Abberviation(s)  : fore 
    Expands To       : foreach($--cursor-- as $k => $v) {
                       }
-   Base Abbreviated : no
-   Act On Variable  : no
+   Base Abbreviated : yes
+   Act On Variable  : yes
+   Notes            : If you don't like the placement of the braces see
+                      |phpNewlineBeforeBrace| for alternative formats.
 ------------------------------------------------------------------------------
                                                                         *func*
    Abberviation(s)  : func
@@ -313,10 +377,11 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
    Base Abbreviated : no
    Act On Variable  : no
    Notes            : this abbreviation calls a routine that asks you for the
-                      function name and places that value in <function name>
-                      see |fold-marker| for info on the the fold wrapper.
-                      This function leaves you in normal mode over the first
-                      paren.
+                      function name and places that value in <function name>.
+                      The |fold-marker| comment lines are optional and are not
+                      displayed with the default settings. See
+                      |phpFoldMarkerFunctions| if you want to use the fold
+                      markers.
 ------------------------------------------------------------------------------
                                                                          *get*
    Abberviation(s)  : get
@@ -344,6 +409,8 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
                       }
    Base Abbreviated : no
    Act On Variable  : no
+   Notes            : If you don't like the placement of the braces see
+                      |phpNewlineBeforeBrace| for alternative formats.
 ------------------------------------------------------------------------------
                                                                          *ife*
    Abberviation(s)  : ife
@@ -352,6 +419,8 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
                       }
    Base Abbreviated : no
    Act On Variable  : no
+   Notes            : If you don't like the placement of the braces see
+                      |phpNewlineBeforeBrace| for alternative formats.
 ------------------------------------------------------------------------------
                                                                        *ifeif*
    Abberviation(s)  : ifeif
@@ -361,6 +430,8 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
                       }
    Base Abbreviated : no
    Act On Variable  : no
+   Notes            : If you don't like the placement of the braces see
+                      |phpNewlineBeforeBrace| for alternative formats.
 ------------------------------------------------------------------------------
                                                                    *ift* *ifl*
    Abberviation(s)  : ifl, ift
@@ -379,18 +450,34 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
    Expands To       : include_once('--cursor--');
    Base Abbreviated : yes
    Act On Variable  : no
+   Notes            : see |phpRequireIncludeParens| if you would prefer 
+                      not to use parenthesis.
 ------------------------------------------------------------------------------
                                                                      *include*
    Abberviation(s)  : include
    Expands To       : include('--cursor--');
    Base Abbreviated : yes
    Act On Variable  : no
+   Notes            : see |phpRequireIncludeParens| if you would prefer 
+                      not to use parenthesis.
 ------------------------------------------------------------------------------
                                                                  *iss* *isset*
    Abberviation(s)  : iss, isset
    Expands To       : isset($--cursor--)
    Base Abbreviated : yes
-   Act On Variable  : no
+   Act On Variable  : yes
+------------------------------------------------------------------------------
+                                                      *isn* *is_null* *isnull*
+   Abberviation(s)  : isn, is_null, isnull
+   Expands To       : is_null($--cursor--)
+   Base Abbreviated : yes
+   Act On Variable  : yes
+------------------------------------------------------------------------------
+                                              *isnum* *is_numeric* *isnumeric*
+   Abberviation(s)  : isnum, is_numeric, isnumeric
+   Expands To       : is_numeric($--cursor--)
+   Base Abbreviated : yes
+   Act On Variable  : yes
 ------------------------------------------------------------------------------
                                                                            *o*
    Abberviation(s)  : o
@@ -429,12 +516,16 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
    Expands To       : require_once('--cursor--');
    Base Abbreviated : yes
    Act On Variable  : no
+   Notes            : see |phpRequireIncludeParens| if you would prefer 
+                      not to use parenthesis.
 ------------------------------------------------------------------------------
                                                                      *require*
    Abberviation(s)  : require
    Expands To       : require('--cursor--');
    Base Abbreviated : yes
    Act On Variable  : no
+   Notes            : see |phpRequireIncludeParens| if you would prefer 
+                      not to use parenthesis.
 ------------------------------------------------------------------------------
                                                     *scc* *strcc* *strcasecmp*
    Abberviation(s)  : scc, strcc, strcasecmp
@@ -520,10 +611,12 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
    Abberviation(s)  : switch sw
    Expands To       : switch ($--cursor--) {
                           Case <case>:
-                          break;
+                              break;
                       }
    Base Abbreviated : no
    Act On Variable  : yes
+   Notes            : If you don't like the placement of the braces see
+                      |phpNewlineBeforeBrace| for alternative formats.
 ------------------------------------------------------------------------------
                                                           *te* *trigger_error*
    Abberviation(s)  : trigger_error, te
@@ -543,6 +636,8 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
                       }
    Base Abbreviated : no
    Act On Variable  : yes
+   Notes            : If you don't like the placement of the braces see
+                      |phpNewlineBeforeBrace| for alternative formats.
 ------------------------------------------------------------------------------
                                                                *ww* *wordwrap*
    Abberviation(s)  : ww, wordwrap
@@ -553,12 +648,19 @@ php ftplugin by culley harrelson (vim@culley.fastmail.fm)
 
 
 ==============================================================================
-6. php_abb TODO list                                            *php-abb-todo*
+                                                                *php-abb-todo*
+6. php_abb todo list
 
     I write abbreviations for new php functions when I have free time or when
     I am tired of typing the same function over and over.  There are plenty of
     php functions left so there is pleanty to do.
 
 ==============================================================================
-$Id: php_abb.txt,v 1.1 2003/05/25 18:33:16 culley Exp culley $
+                                                             *php-abb-credits*
+7. php_abb credits
+
+    Thanks to Dan Loda for the |phpNewlineBeforeBrace| code.
+
+==============================================================================
+$Id: php_abb.txt,v 1.2 2003/05/26 16:21:31 culley Exp culley $
  vim:tw=78:ts=4:ft=help:norl:fdm=manual:
