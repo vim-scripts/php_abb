@@ -1,0 +1,8 @@
+To Install:
+
+Place in ~/.vim/ftplugin or wherever you keep your ftplugin folder.
+
+Alternatively, source the files directly.
+
+php_iab.vim contains insert mode abbreviations without the php
+prefix-- don't use this file if you don't want this feature.
